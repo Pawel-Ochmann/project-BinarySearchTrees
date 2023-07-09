@@ -75,10 +75,43 @@ class Tree {
     }
     return balancedTree(arraySorted, 0, arraySorted.length - 1);
   }
-  insert() {}
-  delete() {}
+  insert(value) {
+    const newNode = new Node(value);
+    function appendNode(node) {
+      if (node.data > value) {
+        !node.left ? (node.left = newNode) : appendNode(node.left);
+      } else !node.right ? (node.right = newNode) : appendNode(node.right);
+    }
+    appendNode(this.root);
+  }
+  delete(value) {
+    function findNode(node) {
+      if (node.data === value) return node;
+      else if (node.data > value) return findNode(node.left);
+      else return findNode(node.right);
+    }
+
+    function removeNoChild(node) {
+      
+    }
+    function removeOneChild(node) {
+
+    }
+    function removeTwoChild(node) {
+
+    }
+    function deleteNode(node) {
+      if (!node.left && !node.right) removeNoChild(node);
+      else if (node.left && node.right) removeOneChild(node);
+      else removeTwoChild(node);
+    }
+
+    deleteNode(findNode(this.root));
+  }
 }
 
 const testTree = new Tree(testArray);
 
+prettyPrint(testTree.root);
+testTree.insert(26);
 prettyPrint(testTree.root);
