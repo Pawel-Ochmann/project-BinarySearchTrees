@@ -1,3 +1,16 @@
+const prettyPrint = (node, prefix = '', isLeft = true) => {
+  if (node === null) {
+    return;
+  }
+  if (node.right !== null) {
+    prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+  }
+  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+  if (node.left !== null) {
+    prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+  }
+};
+
 function mergeSort(arr) {
   function splitFirst(arr) {
     if (arr.length === 1) return arr;
@@ -34,10 +47,7 @@ function mySort(arr) {
   return arrayMapped;
 }
 
-const testArray = [
-  1, 7, 4, 23, 8, 1, 2, 4, 4, 67, 9, 3, 3, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345,
-  324,
-];
+const testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 
 class Node {
   constructor(data) {
@@ -52,9 +62,23 @@ class Tree {
     this.root = this.buildTree(array);
   }
 
-  buildTree(array) {}
+  buildTree(array) {
+    const arraySorted = mySort(array);
+    function balancedTree(array, start, end) {
+      if (start > end) return null;
+      const mid = Math.ceil((start + end) / 2);
+      const node = new Node(array[mid]);
+
+      node.left = balancedTree(array, start, mid - 1);
+      node.right = balancedTree(array, mid + 1, end);
+      return node;
+    }
+    return balancedTree(arraySorted, 0, arraySorted.length - 1);
+  }
   insert() {}
   delete() {}
 }
 
-console.log(mySort(testArray));
+const testTree = new Tree(testArray);
+
+prettyPrint(testTree.root);
