@@ -85,20 +85,50 @@ class Tree {
     appendNode(this.root);
   }
   delete(value) {
+    let parentNode = null;
     function findNode(node) {
       if (node.data === value) return node;
-      else if (node.data > value) return findNode(node.left);
-      else return findNode(node.right);
+      else if (node.data > value) {
+        parentNode = node;
+        return findNode(node.left);
+      } else {
+        parentNode = node;
+        return findNode(node.right);
+      }
     }
 
     function removeNoChild(node) {
-      
+      if (!parentNode) this.root = null;
+      else if (parentNode.left === node) parentNode.left = null;
+      else parentNode.right = null;
     }
     function removeOneChild(node) {
-
+      let grandChild = node.left || node.right;
+      if (parentNode.left === node) parentNode.left = grandChild;
+      else parentNode.right = grandChild;
     }
     function removeTwoChild(node) {
+      let childOfInorderNode = null;
 
+      function appendNode(node) {
+        if (node.data > value) {
+          !node.left ? (node.left = newNode) : appendNode(node.left);
+        } else !node.right ? (node.right = newNode) : appendNode(node.right);
+      }
+
+      function findNextSmallest(node) {
+        if (!node.left) {
+          childOfInorderNode = node.right;
+          return node}
+        else return findNextSmallest(node.left);
+      }
+
+      if (!parentNode) {
+        this.root = findNextSmallest(node);
+        appendNode(childOfInorderNode);
+      } else (parentNode.left === node) {
+        
+      }
     }
     function deleteNode(node) {
       if (!node.left && !node.right) removeNoChild(node);
