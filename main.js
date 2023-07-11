@@ -88,13 +88,13 @@ class Tree {
     let parentNode = null;
     function findNode(node) {
       if (node.data === value) return node;
-      else if (node.data > value) {
+      else if (node.data > value && node.left) {
         parentNode = node;
         return findNode(node.left);
-      } else {
+      } else if (node.data < value && node.right) {
         parentNode = node;
         return findNode(node.right);
-      }
+      } else return null;
     }
 
     function removeNoChild(node) {
@@ -119,21 +119,28 @@ class Tree {
       function findNextSmallest(node) {
         if (!node.left) {
           childOfInorderNode = node.right;
-          return node}
-        else return findNextSmallest(node.left);
+          return node;
+        } else return findNextSmallest(node.left);
       }
 
       if (!parentNode) {
         this.root = findNextSmallest(node);
-        appendNode(childOfInorderNode);
-      } else (parentNode.left === node) {
-        
+        if (childOfInorderNode) appendNode(childOfInorderNode);
+      } else if (parentNode.left === node) {
+        childOfInorderNode = findNextSmallest(node.right).right;
+        parentNode.left = findNextSmallest(node.right);
+        if (childOfInorderNode) appendNode(childOfInorderNode);
+      } else {
+        childOfInorderNode = findNextSmallest(node.right).right;
+        parentNode.right = findNextSmallest(node.right);
+        if (childOfInorderNode) appendNode(childOfInorderNode);
       }
     }
     function deleteNode(node) {
-      if (!node.left && !node.right) removeNoChild(node);
-      else if (node.left && node.right) removeOneChild(node);
-      else removeTwoChild(node);
+      if (!node) return undefined;
+      else if (!node.left && !node.right) removeNoChild(node);
+      else if (node.left && node.right) removeTwoChild(node);
+      else removeOneChild(node);
     }
 
     deleteNode(findNode(this.root));
@@ -142,6 +149,8 @@ class Tree {
 
 const testTree = new Tree(testArray);
 
-prettyPrint(testTree.root);
 testTree.insert(26);
 prettyPrint(testTree.root);
+testTree.delete(67)
+prettyPrint(testTree.root);
+
