@@ -131,23 +131,28 @@ class Tree {
       }
 
       if (!parentNode) {
-        this.root = findNextSmallest(node);
-        if (childOfInorderNode) appendNode(childOfInorderNode);
+        childOfInorderNode = findNextSmallest(node.right).right;
+        const rootSmallest = new Node(findNextSmallest(node.right).data);
+        getThis.delete(findNextSmallest(node.right).data);
+        getThis.root = rootSmallest;
+        if (node.left) appendNode(node.left, getThis.root);
+        if (node.right) appendNode(node.right, getThis.root);
+        if (childOfInorderNode) appendNode(childOfInorderNode, getThis.root);
       } else if (parentNode.left === node) {
         childOfInorderNode = findNextSmallest(node.right).right;
         const leftSmallest = new Node(findNextSmallest(node.left).data);
         getThis.delete(findNextSmallest(node.left).data);
-        parentNode.right = leftSmallest;
-        appendNode(node.left, parentNode);
-        appendNode(node.right, parentNode);
+        parentNode.left = leftSmallest;
+        if (node.left) appendNode(node.left, parentNode);
+        if (node.right) appendNode(node.right, parentNode);
         if (childOfInorderNode) appendNode(childOfInorderNode, parentNode);
       } else {
         childOfInorderNode = findNextSmallest(node.right).right;
         const rightSmallest = new Node(findNextSmallest(node.right).data);
         getThis.delete(findNextSmallest(node.right).data);
         parentNode.right = rightSmallest;
-        appendNode(node.left, parentNode);
-        appendNode(node.right, parentNode);
+        if (node.left) appendNode(node.left, parentNode);
+        if (node.right) appendNode(node.right, parentNode);
 
         if (childOfInorderNode) appendNode(childOfInorderNode, parentNode);
       }
@@ -168,5 +173,5 @@ const testTree = new Tree(testArray);
 
 testTree.insert(26);
 prettyPrint(testTree.root);
-testTree.delete(4);
+testTree.delete(8);
 prettyPrint(testTree.root);
