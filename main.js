@@ -140,8 +140,8 @@ class Tree {
         if (childOfInorderNode) appendNode(childOfInorderNode, getThis.root);
       } else if (parentNode.left === node) {
         childOfInorderNode = findNextSmallest(node.right).right;
-        const leftSmallest = new Node(findNextSmallest(node.left).data);
-        getThis.delete(findNextSmallest(node.left).data);
+        const leftSmallest = new Node(findNextSmallest(node.right).data);
+        getThis.delete(findNextSmallest(node.right).data);
         parentNode.left = leftSmallest;
         if (node.left) appendNode(node.left, parentNode);
         if (node.right) appendNode(node.right, parentNode);
@@ -167,11 +167,56 @@ class Tree {
 
     return deleteNode(findNode(this.root));
   }
+
+  find(value) {
+    function checkNode(node) {
+      if (!node) return false;
+      else if (node.data === value) return true;
+      else if (node.data > value) return checkNode(node.left);
+      else return checkNode(node.right);
+    }
+    return checkNode(this.root);
+  }
+  levelOrder(callback) {
+    let queueArray = [this.root];
+    const arrayOfValue = [];
+    function traverse() {
+      while (queueArray.length > 0) {
+        let node = queueArray.shift();
+        if (node.left) queueArray.push(node.left);
+        if (node.right) queueArray.push(node.right);
+        if (!callback) arrayOfValue.push(node);
+        else callback(node.data);
+      }
+    }
+    traverse();
+    if (!callback) return arrayOfValue;
+  }
+  levelOrderRecursive(callback) {
+    const arrayOfValue = [];
+    let queueArray = [this.root];
+    function traverse(array) {
+      const newArray = [];
+      for (const node of array) {
+        if (!callback) arrayOfValue.push(node.data);
+        else callback(node.data);
+        if (node.left) queueArray.push(node.left);
+        if (node.right) queueArray.push(node.right);
+      }
+      if (newArray.length > 0) traverse(newArray);
+    }
+    traverse(queueArray);
+    if (!callback) return arrayOfValue;
+  }
 }
 
 const testTree = new Tree(testArray);
 
 testTree.insert(26);
 prettyPrint(testTree.root);
-testTree.delete(8);
-prettyPrint(testTree.root);
+
+function test(node) {
+  console.log(node);
+}
+
+testTree.levelOrderRecursive(test);
