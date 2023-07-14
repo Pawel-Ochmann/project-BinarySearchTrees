@@ -208,6 +208,47 @@ class Tree {
     traverse(queueArray);
     if (!callback) return arrayOfValue;
   }
+
+  depth(value) {
+    let depthCounter = 0;
+    function checkDepth(node) {
+      if (node.data === value) return;
+      else if (node.data > value) {
+        depthCounter++;
+        checkDepth(node.left);
+      } else {
+        depthCounter++;
+        checkDepth(node.right);
+      }
+    }
+    checkDepth(this.root);
+    return depthCounter;
+  }
+  height(value) {
+    function findNode(node) {
+      if (node.data === value) return node;
+      else if (node.data > value && node.left) {
+        return findNode(node.left);
+      } else if (node.data < value && node.right) {
+        return findNode(node.right);
+      } else return null;
+    }
+    let heightCounter = -1;
+    function checkHeight(array) {
+      const nextLevelArray = [];
+      if (array.length <= 0) return;
+      else {
+        for (let node of array) {
+          if (node.left) nextLevelArray.push(node.left);
+          if (node.right) nextLevelArray.push(node.right);
+        }
+        heightCounter++;
+        checkHeight(nextLevelArray);
+      }
+    }
+    checkHeight([findNode(this.root)]);
+    return heightCounter;
+  }
 }
 
 const testTree = new Tree(testArray);
@@ -215,8 +256,4 @@ const testTree = new Tree(testArray);
 testTree.insert(26);
 prettyPrint(testTree.root);
 
-function test(node) {
-  console.log(node);
-}
-
-testTree.levelOrderRecursive(test);
+console.log(testTree.height(4));
