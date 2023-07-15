@@ -78,7 +78,8 @@ class Tree {
   insert(value) {
     const newNode = new Node(value);
     function appendNode(node) {
-      if (node.data > value) {
+      if (node.data === value) return;
+      else if (node.data > value) {
         !node.left ? (node.left = newNode) : appendNode(node.left);
       } else !node.right ? (node.right = newNode) : appendNode(node.right);
     }
@@ -249,11 +250,35 @@ class Tree {
     checkHeight([findNode(this.root)]);
     return heightCounter;
   }
+  isBalanced() {
+    const leafNodes = [];
+    const heights = [];
+    function getLeafNodes(node) {
+      if (!node) return;
+      else if (!node.left && !node.right) leafNodes.push(node.data);
+      else {
+        getLeafNodes(node.left);
+        getLeafNodes(node.right);
+      }
+    }
+    getLeafNodes(this.root);
+    leafNodes.forEach((node) => {
+      heights.push(this.depth(node));
+    });
+    const diff = Math.max(...heights) - Math.min(...heights);
+    if (diff < 2) return true;
+    return false;
+  }
+  rebalance() {}
 }
 
 const testTree = new Tree(testArray);
 
-testTree.insert(26);
+testTree.insert(-15);
+testTree.insert(-1);
+testTree.insert(-145);
+testTree.insert(-153);
+testTree.insert(-1512);
 prettyPrint(testTree.root);
 
-console.log(testTree.height(4));
+console.log(testTree.isBalanced());
