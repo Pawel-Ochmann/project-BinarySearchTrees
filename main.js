@@ -47,8 +47,6 @@ function mySort(arr) {
   return arrayMapped;
 }
 
-const testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-
 class Node {
   constructor(data) {
     this.data = data;
@@ -186,7 +184,7 @@ class Tree {
         let node = queueArray.shift();
         if (node.left) queueArray.push(node.left);
         if (node.right) queueArray.push(node.right);
-        if (!callback) arrayOfValue.push(node);
+        if (!callback) arrayOfValue.push(node.data);
         else callback(node.data);
       }
     }
@@ -307,20 +305,45 @@ class Tree {
     if (diff < 2) return true;
     return false;
   }
-  rebalance() {}
+  rebalance() {
+    this.root = this.buildTree(this.preorder());
+  }
 }
 
-const testTree = new Tree(testArray);
+function createRandomArray() {
+  const randomArray = [];
+  for (let i = 1; i <= 30; i++) {
+    const number = Math.floor(Math.random() * 100);
+    randomArray.push(number);
+  }
+  return randomArray;
+}
 
-testTree.insert(-15);
-testTree.insert(-1);
-testTree.insert(-145);
-testTree.insert(-153);
-testTree.insert(-1512);
+const testTree = new Tree(createRandomArray());
 prettyPrint(testTree.root);
+console.log(testTree.isBalanced());
+console.log(
+  testTree.levelOrder(),
+  testTree.levelOrderRecursive(),
+  testTree.preorder(),
+  testTree.postorder(),
+  testTree.inorder()
+);
 
-function testing(value) {
-  console.log(value);
-}
+testTree.insert(135531);
+testTree.insert(12313);
+testTree.insert(9987);
+testTree.insert(9098);
+testTree.insert(15463);
 
-console.log(testTree.preorder(), testTree.postorder(), testTree.inorder());
+console.log(testTree.isBalanced());
+testTree.rebalance();
+console.log(testTree.isBalanced());
+
+console.log(
+  testTree.levelOrder(),
+  testTree.levelOrderRecursive(),
+  testTree.preorder(),
+  testTree.postorder(),
+  testTree.inorder()
+);
