@@ -250,6 +250,44 @@ class Tree {
     checkHeight([findNode(this.root)]);
     return heightCounter;
   }
+  inorder(callback) {
+    const inorderArray = [];
+    function inorderTraverse(node) {
+      if (!node) return;
+      inorderTraverse(node.left);
+      if (!callback) inorderArray.push(node.data);
+      else callback(node.data);
+      inorderTraverse(node.right);
+    }
+    inorderTraverse(this.root);
+    if (!callback) return inorderArray;
+  }
+  preorder(callback) {
+    const preorderArray = [];
+    function preorderTraverse(node) {
+      if (!node) return;
+
+      if (!callback) preorderArray.push(node.data);
+      else callback(node.data);
+      preorderTraverse(node.left);
+      preorderTraverse(node.right);
+    }
+    preorderTraverse(this.root);
+    if (!callback) return preorderArray;
+  }
+  postorder(callback) {
+    const postorderArray = [];
+    function postorderTraverse(node) {
+      if (!node) return;
+      postorderTraverse(node.left);
+      postorderTraverse(node.right);
+      if (!callback) postorderArray.push(node.data);
+      else callback(node.data);
+    }
+    postorderTraverse(this.root);
+    if (!callback) return postorderArray;
+  }
+
   isBalanced() {
     const leafNodes = [];
     const heights = [];
@@ -281,4 +319,8 @@ testTree.insert(-153);
 testTree.insert(-1512);
 prettyPrint(testTree.root);
 
-console.log(testTree.isBalanced());
+function testing(value) {
+  console.log(value);
+}
+
+console.log(testTree.preorder(), testTree.postorder(), testTree.inorder());
